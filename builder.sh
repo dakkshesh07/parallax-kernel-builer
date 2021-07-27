@@ -13,4 +13,5 @@ sed -i s/placeholder2/${CHAT_ID}/g telegram-send.conf
 mkdir $HOME/.config
 mv telegram-send.conf $HOME/.config/telegram-send.conf
 mv build.sh $HOME/Kernel/build.sh
+cd $HOME/Kernel
 bash $HOME/Kernel/build.sh
