@@ -1,4 +1,5 @@
 #bin/#!/bin/bash
+telegram-send "$(date): Build Started. Device: Realme XT"
 rm -r out
 mkdir out
 make clean && make distclean && make mrproper
@@ -58,7 +59,7 @@ if [ -f out/arch/arm64/boot/Image.gz-dtb ]; then
   Last commit (hash): <code>"$(git rev-parse --short HEAD)"</code>
   "
   telegram-send --format html "$final"
-  telegram-send --file $KERNELDIR/$FINAL_KERNEL_ZIP --timeout 10009.0
+  telegram-send --file $KERNELDIR/$FINAL_KERNEL_ZIP
   exit
 
 else
