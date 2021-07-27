@@ -1,7 +1,7 @@
-# AtomX Kernel Builder
+# Parallax Kernel Builder
 
 ## Build status ##
-[![Build Status](https://cloud.drone.io/api/badges/Divyanshu-Modi/AtomX-Kernel-Builder/status.svg?ref=refs/heads/main)](https://cloud.drone.io/Divyanshu-Modi/AtomX-Kernel-Builder)
+[![Build Status](https://cloud.drone.io/api/badges/dakkshesh07/parallax-kernel-builer/status.svg?ref=refs/heads/main)](https://cloud.drone.io/dakkshesh07/parallax-kernel-builer)
 
 ## What this is ##
 ---------------------------------------------------------------------
