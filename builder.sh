@@ -14,5 +14,4 @@ mkdir $HOME/.config
 mv telegram-send.conf $HOME/.config/telegram-send.conf
 mv build.sh $HOME/Kernel/build.sh
 cd $HOME/Kernel
-git reset --hard d6232317d4d0a2856d1fabd362b7b5f680e5c158
 bash $HOME/Kernel/build.sh
