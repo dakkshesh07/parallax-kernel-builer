@@ -4,7 +4,7 @@ rm -r out
 mkdir out
 make clean && make distclean && make mrproper
 
-KERNEL_DEFCONFIG=RMX1921_defconfig
+KERNEL_DEFCONFIG=RMX1921_fullLTO_defconfig
 Device="Realme XT"
 ANYKERNEL3_DIR=$PWD/AnyKernel3/
 KERNELDIR=$PWD/
