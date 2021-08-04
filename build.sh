@@ -5,10 +5,10 @@ mkdir out
 make clean && make distclean && make mrproper
 
 KERNEL_DEFCONFIG=RMX1921_defconfig
+sed -i '/CONFIG_THINLTO=y/d' arch/arm64/configs/RMX1921_defconfig
 Device="Realme XT"
 ANYKERNEL3_DIR=$PWD/AnyKernel3/
 KERNELDIR=$PWD/
-FINAL_KERNEL_ZIP=parallax_test_v1.zip
 PATH="${PWD}/clang/bin:${PATH}"
 export KBUILD_COMPILER_STRING="$(${PWD}/clang/bin/clang --version | head -n 1 | perl -pe 's/\(http.*?\)//gs' | sed -e 's/  */ /g' -e 's/[[:space:]]*$//')"
 export ARCH=arm64
@@ -34,15 +34,17 @@ make -j$(nproc --all) O=out \
                       STRIP=llvm-strip
 
 if [ -f out/arch/arm64/boot/Image.gz-dtb ]; then
-  rm -rf $ANYKERNEL3_DIR/Image.gz-dtb
-  rm -rf $ANYKERNEL3_DIR/$FINAL_KERNEL_ZIP
+  cd $ANYKERNEL3_DIR/
+  make clean
+  cd ..
 
   cp $PWD/out/arch/arm64/boot/Image.gz-dtb $ANYKERNEL3_DIR/
   cp $PWD/out/arch/arm64/boot/dtbo.img $ANYKERNEL3_DIR/
 
   cd $ANYKERNEL3_DIR/
-  zip -r9 $FINAL_KERNEL_ZIP * -x README $FINAL_KERNEL_ZIP
-  mv $ANYKERNEL3_DIR/$FINAL_KERNEL_ZIP $KERNELDIR/$FINAL_KERNEL_ZIP
+  make zip
+  zipname=$(find -type f -name "*.zip" | cut -c 3-)
+  zipsha=$(cat $zipname.sha1)
   cd ..
 
   BUILD_END=$(date +"%s")
@@ -51,15 +53,25 @@ if [ -f out/arch/arm64/boot/Image.gz-dtb ]; then
   ***************Parallax-Kernel***************
   Linux Version: <code>$(make kernelversion)</code>
   Maintainer: <code>Dakkshesh</code>
-  Device: <code>$Device</code>
+  Device: <code>Realme XT</code>
   Codename: <code>RMX1921</code>
   Build Date: <code>$(date +"%Y-%m-%d %H:%M")</code>
   Build Duration: <code>$(($DIFF / 60)).$(($DIFF % 60)) mins</code>
+  ---------------------------------------------
+
+  -----------------zip details-----------------
+  Zip Name: <code>"$zipname"</code>
+  Zip sha1: <code>"$zipsha"</code>
+
+  -------------last commit details-------------
   Last commit (name): <code>"$(git show -s --format=%s)"</code>
   Last commit (hash): <code>"$(git rev-parse --short HEAD)"</code>
   "
+  echo -e "$yellow Device:-$Device.$nocol"
+  echo -e "$yellow Build Time:- Completed in $(($DIFF / 60)) minute(s) and $(($DIFF % 60)) seconds.$nocol"
   telegram-send --format html "$final"
-  telegram-send --file $KERNELDIR/$FINAL_KERNEL_ZIP
+  cd $ANYKERNEL3_DIR/
+  telegram-send --file $zipname --timeout 69
   exit
 
 else
