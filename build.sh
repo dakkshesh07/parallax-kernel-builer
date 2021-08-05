@@ -12,30 +12,27 @@ KERNELDIR=$PWD/
 PATH="${PWD}/clang/bin:${PATH}"
 export KBUILD_COMPILER_STRING="$(${PWD}/clang/bin/clang --version | head -n 1 | perl -pe 's/\(http.*?\)//gs' | sed -e 's/  */ /g' -e 's/[[:space:]]*$//')"
 export ARCH=arm64
-export SUBARCH=arm32
 MAKE="./makeparallel"
 BUILD_START=$(date +"%s")
 
 make $KERNEL_DEFCONFIG O=out
-make -j$(nproc --all)	\
-	O=out \
-	ARCH=arm64 \
-  SUBARCH=arm32 \
-	CC=clang \
-	AR=llvm-ar \
-	NM=llvm-nm \
-	LD=ld.lld \
-	STRIP=llvm-strip \
-	OBJCOPY=llvm-objcopy \
-	OBJDUMP=llvm-objdump \
-	OBJSIZE=llvm-size \
-	READELF=llvm-readelf \
-	HOSTCC=clang \
-	HOSTCXX=clang++ \
-	HOSTAR=llvm-ar \
-	HOSTLD=ld.lld \
-	CROSS_COMPILE=aarch64-linux-gnu- \
-	CROSS_COMPILE_ARM32=arm-linux-gnueabi- 
+make -j$(nproc --all) O=out \
+                      ARCH=arm64 \
+                      CC=clang \
+                      AR=llvm-ar \
+                      NM=llvm-nm \
+                      LD=ld.lld \
+                      STRIP=llvm-strip \
+                      OBJCOPY=llvm-objcopy \
+                      OBJDUMP=llvm-objdump \
+                      OBJSIZE=llvm-size \
+                      READELF=llvm-readelf \
+                      HOSTCC=clang \
+                      HOSTCXX=clang++ \
+                      HOSTAR=llvm-ar \
+                      HOSTLD=ld.lld \
+                      CROSS_COMPILE=aarch64-linux-gnu- \
+                      CROSS_COMPILE_ARM32=arm-linux-gnueabi- \
 
 if [ -f out/arch/arm64/boot/Image.gz-dtb ]; then
   cd $ANYKERNEL3_DIR/
