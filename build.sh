@@ -8,17 +8,16 @@ KERNEL_DEFCONFIG=RMX1921_defconfig
 sed -i '/CONFIG_THINLTO=y/d' arch/arm64/configs/RMX1921_defconfig
 Device="Realme XT"
 ANYKERNEL3_DIR=$PWD/AnyKernel3/
-KERNELDIR=$PWD/
-PATH="${PWD}/clang/bin:${PATH}"
-export KBUILD_COMPILER_STRING="$(${PWD}/clang/bin/clang --version | head -n 1 | perl -pe 's/\(http.*?\)//gs' | sed -e 's/  */ /g' -e 's/[[:space:]]*$//')"
-export ARCH=arm64
+KERNELDIR=$HOME/Kernel
+export KBUILD_COMPILER_STRING=$("$KERNELDIR"/gcc-arm64/bin/aarch64-elf-gcc --version | head -n 1)
 MAKE="./makeparallel"
 BUILD_START=$(date +"%s")
 
 make $KERNEL_DEFCONFIG O=out
 make -j$(nproc --all) O=out \
+                      PATH=$KERNELDIR/gcc-arm64/bin/:$KERNELDIR/gcc-arm32/bin/:$PATH \
                       ARCH=arm64 \
-                      CC=clang \
+                      CC=aarch64-elf-gcc \
                       AR=llvm-ar \
                       NM=llvm-nm \
                       LD=ld.lld \
@@ -26,13 +25,11 @@ make -j$(nproc --all) O=out \
                       OBJCOPY=llvm-objcopy \
                       OBJDUMP=llvm-objdump \
                       OBJSIZE=llvm-size \
-                      READELF=llvm-readelf \
-                      HOSTCC=clang \
-                      HOSTCXX=clang++ \
+                      HOSTCXX=aarch64-elf-g++ \
                       HOSTAR=llvm-ar \
                       HOSTLD=ld.lld \
-                      CROSS_COMPILE=aarch64-linux-gnu- \
-                      CROSS_COMPILE_ARM32=arm-linux-gnueabi- \
+                      CROSS_COMPILE=aarch64-elf- \
+                      CROSS_COMPILE_ARM32=arm-eabi- \
 
 if [ -f out/arch/arm64/boot/Image.gz-dtb ]; then
   cd $ANYKERNEL3_DIR/
