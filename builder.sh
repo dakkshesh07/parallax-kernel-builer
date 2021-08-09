@@ -3,7 +3,7 @@
 pacman -Syu --noconfirm --needed git bc inetutils zip libxml2 python3 \
                                  jre-openjdk jdk-openjdk flex bison libc++ python-pip
 
-git clone -q --depth=1 https://github.com/dakkshesh07/parallax_kernel_realme_rmx1921.git -b 11-stable $HOME/Kernel
+git clone -q --depth=1 https://github.com/dakkshesh07/parallax_kernel_realme_rmx1921.git -b test $HOME/Kernel
 git clone -q --depth=1 https://github.com/kdrag0n/proton-clang.git $HOME/Kernel/clang
 pip3 -q install telegram-send
 echo 'Sources and Api installed...'
