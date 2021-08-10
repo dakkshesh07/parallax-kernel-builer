@@ -2,7 +2,7 @@
 # Copyright (c) 2021, Dakkshesh <dakkshesh5@gmail.com>
 #bin/#!/bin/bash
 
-COMPILER=$1
+export COMPILER=$1
 
 Device="Realme XT"
 Codename="RMX1921"
