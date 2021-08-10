@@ -5,25 +5,27 @@
 COMPILER=$1
 
 Device="Realme XT"
-
 Codename="RMX1921"
-
 Maintainer="Dakkshesh"
+
+mkdir out
+
+KERNEL_DEFCONFIG=RMX1921_defconfig
+ANYKERNEL3_DIR=$PWD/AnyKernel3
+KERNELDIR=$PWD
 
 if [[ "$COMPILER" == "CLANG" ]]; then
   COMPILERNAME=$("$KERNELDIR"/clang/bin/clang --version | head -n 1 | sed 's|\(.*\)(.*|\1|')
-  export KBUILD_COMPILER_STRING="$(${PWD}/clang/bin/clang --version | head -n 1 | perl -pe 's/\(http.*?\)//gs' | sed -e 's/  */ /g' -e 's/[[:space:]]*$//')"
+  export KBUILD_COMPILER_STRING=$("$KERNELDIR"/clang/bin/clang --version | head -n 1 | perl -pe 's/\(http.*?\)//gs' | sed -e 's/  */ /g' -e 's/[[:space:]]*$//')
 elif [[ "$COMPILER" == "GCC" ]]; then
   COMPILERNAME=$("$KERNELDIR"/gcc-arm64/bin/aarch64-elf-gcc --version | head -n 1 | sed "s/^[^ ]* //")
   export KBUILD_COMPILER_STRING=$("$KERNELDIR"/gcc-arm64/bin/aarch64-elf-gcc --version | head -n 1)
 fi
-mkdir out
 
-KERNEL_DEFCONFIG=RMX1921_defconfig
-ANYKERNEL3_DIR=$PWD/AnyKernel3/
-KERNELDIR=$PWD/
+export ARCH=arm64
 telegram-send "$(date): Build Started. Device: $Device | Compiler: $COMPILERNAME"
 BUILD_START=$(date +"%s")
+
 make $KERNEL_DEFCONFIG O=out
 if [[ "$COMPILER" == "CLANG" ]]; then
   make -j$(nproc --all) O=out \
