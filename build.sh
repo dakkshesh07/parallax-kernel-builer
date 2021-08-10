@@ -28,8 +28,9 @@ BUILD_START=$(date +"%s")
 
 make $KERNEL_DEFCONFIG O=out
 if [[ "$COMPILER" == "CLANG" ]]; then
+  export PATH=$KERNELDIR/clang/bin:$PATH
   make -j$(nproc --all) O=out \
-                      PATH=clang/bin:$PATH \
+                      PATH=$KERNELDIR/clang/bin:$PATH \
                       ARCH=arm64 \
                       CC=clang \
                       AR=llvm-ar \
