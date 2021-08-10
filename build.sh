@@ -1,35 +1,62 @@
+# SPDX-License-Identifier: GPL-3.0
+# Copyright (c) 2021, Dakkshesh <dakkshesh5@gmail.com>
 #bin/#!/bin/bash
-telegram-send "$(date): Build Started. Device: Realme XT"
-rm -r out
+
+COMPILER=$1
+
+Device="Realme XT"
+
+Codename="RMX1921"
+
+Maintainer="Dakkshesh"
+
+if [[ "$COMPILER" == "CLANG" ]]; then
+  COMPILERNAME=$("$KERNELDIR"/clang/bin/clang --version | head -n 1 | sed 's|\(.*\)(.*|\1|')
+  export KBUILD_COMPILER_STRING="$(${PWD}/clang/bin/clang --version | head -n 1 | perl -pe 's/\(http.*?\)//gs' | sed -e 's/  */ /g' -e 's/[[:space:]]*$//')"
+elif [[ "$COMPILER" == "GCC" ]]; then
+  COMPILERNAME=$("$KERNELDIR"/gcc-arm64/bin/aarch64-elf-gcc --version | head -n 1 | sed "s/^[^ ]* //")
+  export KBUILD_COMPILER_STRING=$("$KERNELDIR"/gcc-arm64/bin/aarch64-elf-gcc --version | head -n 1)
+fi
 mkdir out
-make clean && make distclean && make mrproper
 
 KERNEL_DEFCONFIG=RMX1921_defconfig
-sed -i '/CONFIG_THINLTO=y/d' arch/arm64/configs/RMX1921_defconfig
-Device="Realme XT"
 ANYKERNEL3_DIR=$PWD/AnyKernel3/
-KERNELDIR=$HOME/Kernel
-export KBUILD_COMPILER_STRING=$("$KERNELDIR"/gcc-arm64/bin/aarch64-elf-gcc --version | head -n 1)
-MAKE="./makeparallel"
+KERNELDIR=$PWD/
+telegram-send "$(date): Build Started. Device: $Device | Compiler: $COMPILERNAME"
 BUILD_START=$(date +"%s")
-
 make $KERNEL_DEFCONFIG O=out
-make -j$(nproc --all) O=out \
-                      PATH=$KERNELDIR/gcc-arm64/bin/:$KERNELDIR/gcc-arm32/bin/:$PATH \
+if [[ "$COMPILER" == "CLANG" ]]; then
+  make -j$(nproc --all) O=out \
+                      PATH=clang/bin:$PATH \
                       ARCH=arm64 \
-                      CC=aarch64-elf-gcc \
+                      CC=clang \
                       AR=llvm-ar \
                       NM=llvm-nm \
-                      LD=ld.lld \
                       STRIP=llvm-strip \
                       OBJCOPY=llvm-objcopy \
                       OBJDUMP=llvm-objdump \
                       OBJSIZE=llvm-size \
+                      HOSTCC=clang \
+                      HOSTCXX=clang++ \
+                      HOSTAR=llvm-ar \
+                      CROSS_COMPILE=aarch64-linux-gnu- \
+                      CROSS_COMPILE_ARM32=arm-linux-gnueabi-
+elif [[ "$COMPILER" == "GCC" ]]; then
+  make -j$(nproc --all) O=out \
+                      PATH=$KERNELDIR/gcc-arm64/bin/:$KERNELDIR/gcc-arm32/bin/:/usr/bin:$PATH \
+                      ARCH=arm64 \
+                      CC=aarch64-elf-gcc \
+                      AR=aarch64-elf-ar \
+                      NM=llvm-nm \
+                      STRIP=aarch64-elf-strip\
+                      OBJCOPY=llvm-objcopy \
+                      OBJDUMP=aarch64-elf-objdump \
+                      OBJSIZE=llvm-size \
                       HOSTCXX=aarch64-elf-g++ \
                       HOSTAR=llvm-ar \
-                      HOSTLD=ld.lld \
                       CROSS_COMPILE=aarch64-elf- \
-                      CROSS_COMPILE_ARM32=arm-eabi- \
+                      CROSS_COMPILE_ARM32=arm-eabi-
+fi
 
 if [ -f out/arch/arm64/boot/Image.gz-dtb ]; then
   cd $ANYKERNEL3_DIR/
@@ -50,9 +77,10 @@ if [ -f out/arch/arm64/boot/Image.gz-dtb ]; then
   final="
   ***************Parallax-Kernel***************
   Linux Version: <code>$(make kernelversion)</code>
-  Maintainer: <code>Dakkshesh</code>
-  Device: <code>Realme XT</code>
-  Codename: <code>RMX1921</code>
+  Maintainer: <code>'$Maintainer'</code>
+  Compiler: <code>'$COMPILERNAME'</code>
+  Device: <code>"$Device"</code>
+  Codename: <code>"$Codename"</code>
   Build Date: <code>$(date +"%Y-%m-%d %H:%M")</code>
   Build Duration: <code>$(($DIFF / 60)).$(($DIFF % 60)) mins</code>
   ---------------------------------------------
@@ -73,6 +101,6 @@ if [ -f out/arch/arm64/boot/Image.gz-dtb ]; then
   exit
 
 else
-  telegram-send "$(date): Build Failed, Go Die"
+  telegram-send "$(date): ⚠️Error kernel Compilaton failed⚠️"
   exit 1
 fi
