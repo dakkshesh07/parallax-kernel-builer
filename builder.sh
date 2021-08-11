@@ -17,4 +17,7 @@ mv telegram-send.conf $HOME/.config/telegram-send.conf
 mv build.sh $HOME/Kernel/build.sh
 cd $HOME/Kernel
 bash $HOME/Kernel/build.sh GCC
+rm -r out
+mkdir out
+make clean && make distclean && make mrproper
 bash $HOME/Kernel/build.sh CLANG
