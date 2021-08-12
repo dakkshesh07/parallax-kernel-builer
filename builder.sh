@@ -17,6 +17,7 @@ mv telegram-send.conf $HOME/.config/telegram-send.conf
 mv build.sh $HOME/Kernel/build.sh
 cd $HOME/Kernel
 bash $HOME/Kernel/build.sh GCC
+telegram-send "$(date): | Cleaning and Switching Toolchain |"
 rm -r out
 mkdir out
 make clean && make distclean && make mrproper
