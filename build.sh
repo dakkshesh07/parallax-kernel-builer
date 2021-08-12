@@ -70,14 +70,12 @@ elif [[ "$COMPILER" == "GCC" ]]; then
                       CC=aarch64-elf-gcc \
                       AR=aarch64-elf-ar \
                       NM=llvm-nm \
-                      LD=ld.lld \
                       STRIP=aarch64-elf-strip\
                       OBJCOPY=llvm-objcopy \
                       OBJDUMP=aarch64-elf-objdump \
                       OBJSIZE=llvm-size \
                       HOSTCXX=aarch64-elf-g++ \
                       HOSTAR=llvm-ar \
-                      HOSTLD=ld.lld \
                       CROSS_COMPILE=aarch64-elf- \
                       CROSS_COMPILE_ARM32=arm-eabi-
 fi
