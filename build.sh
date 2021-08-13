@@ -35,10 +35,10 @@ elif [[ "$COMPILER" == "GCC" ]]; then
   sed -i 's/CONFIG_ARCH_SUPPORTS_LTO_CLANG=y/# CONFIG_ARCH_SUPPORTS_LTO_CLANG is not set/g' arch/arm64/configs/RMX1921_defconfig
   sed -i 's/CONFIG_LTO_NONE=y/# CONFIG_LTO_NONE is not set/g' arch/arm64/configs/RMX1921_defconfig
   sed -i 's/CONFIG_LTO_CLANG=y/# CONFIG_LTO_CLANG is not set/g' arch/arm64/configs/RMX1921_defconfig
-  sed -i 's/# CONFIG_LTO_GCC is not set/CONFIG_LTO_GCC=y/g' arch/arm64/configs/RMX1921_defconfig
+  sed -i 's/CONFIG_LTO_GCC=y/# CONFIG_LTO_GCC is not set/g' arch/arm64/configs/RMX1921_defconfig
   sed -i 's/CONFIG_LLVM_POLLY=y/# CONFIG_LLVM_POLLY is not set/g' arch/arm64/configs/RMX1921_defconfig
   sed -i '/CONFIG_THINLTO=y/d' arch/arm64/configs/RMX1921_defconfig
-  sed -i 's/CONFIG_LD_LLD=y/# CONFIG_LD_LLD is not set/g' arch/arm64/configs/RMX1921_defconfig
+  sed -i 's/# CONFIG_LD_LLD is not set/CONFIG_LD_LLD=y/g' arch/arm64/configs/RMX1921_defconfig
 fi
 
 export ARCH=arm64
@@ -72,12 +72,14 @@ elif [[ "$COMPILER" == "GCC" ]]; then
                       CC=aarch64-elf-gcc \
                       AR=aarch64-elf-ar \
                       NM=llvm-nm \
+                      LD=ld.lld \
                       STRIP=aarch64-elf-strip\
                       OBJCOPY=llvm-objcopy \
                       OBJDUMP=aarch64-elf-objdump \
                       OBJSIZE=llvm-size \
                       HOSTCXX=aarch64-elf-g++ \
                       HOSTAR=llvm-ar \
+                      HOSTLD=ld.lld \
                       CROSS_COMPILE=aarch64-elf- \
                       CROSS_COMPILE_ARM32=arm-eabi-
 fi
