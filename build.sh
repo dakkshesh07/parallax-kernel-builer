@@ -31,7 +31,7 @@ elif [[ "$COMPILER" == "GCC" ]]; then
   COMPILERNAME=$("$KERNELDIR"/gcc-arm64/bin/aarch64-elf-gcc --version | head -n 1 | sed "s/^[^ ]* //")
   export KBUILD_COMPILER_STRING=$("$KERNELDIR"/gcc-arm64/bin/aarch64-elf-gcc --version | head -n 1)
 
-  sed -i 's/# CONFIG_LTO is not set/CONFIG_LTO=y/g' arch/arm64/configs/RMX1921_defconfig
+  sed -i 's/CONFIG_LTO=y/# CONFIG_LTO is not set/g' arch/arm64/configs/RMX1921_defconfig
   sed -i 's/CONFIG_ARCH_SUPPORTS_LTO_CLANG=y/# CONFIG_ARCH_SUPPORTS_LTO_CLANG is not set/g' arch/arm64/configs/RMX1921_defconfig
   sed -i 's/CONFIG_LTO_NONE=y/# CONFIG_LTO_NONE is not set/g' arch/arm64/configs/RMX1921_defconfig
   sed -i 's/CONFIG_LTO_CLANG=y/# CONFIG_LTO_CLANG is not set/g' arch/arm64/configs/RMX1921_defconfig
