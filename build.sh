@@ -95,7 +95,7 @@ if [ -f out/arch/arm64/boot/Image.gz-dtb ]; then
   cd $ANYKERNEL3_DIR/
   make zip
   zipname=$(find -type f -name "*.zip" | cut -c 3-)
-  zipsha=$(cat $zipname.sha1)
+  zipsha=$(cat $zipname.sha1 | cut -d ' ' -f 1)
   cd ..
 
   BUILD_END=$(date +"%s")
