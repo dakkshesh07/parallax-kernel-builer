@@ -89,8 +89,8 @@ if [ -f out/arch/arm64/boot/Image.gz-dtb ]; then
   make clean
   cd ..
 
-  cp $PWD/out/arch/arm64/boot/Image.gz-dtb $ANYKERNEL3_DIR/image/
-  cp $PWD/out/arch/arm64/boot/dtbo.img $ANYKERNEL3_DIR/image/
+  cp $PWD/out/arch/arm64/boot/Image.gz-dtb $ANYKERNEL3_DIR/parallax-kernel/image/
+  cp $PWD/out/arch/arm64/boot/dtbo.img $ANYKERNEL3_DIR/parallax-kernel/image/
 
   cd $ANYKERNEL3_DIR/
   make zip
